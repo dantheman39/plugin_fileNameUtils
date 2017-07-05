@@ -18,21 +18,21 @@ Summary
 Note that I use "return" as a shorthand for finding the result in: 
    myResult$ = procedureName.result$
 
-* @safeFileName: .inFileName$
+* @safeFileName: inFileName$
 
 Returns a file name that doesn't exist, using `[dash][zeroPaddedNumber]`, i.e.
 if "fileName.wav" exists, it will return "fileName-01.wav".
 
-* @getExtension: .fileName$
+* @getExtension: fileName$
 
 Returns extension, including dot. Returns an empty string if no period in name
 
-* @removeExtension: .fileName$
+* @removeExtension: fileName$
 
 Returns part of file name without extension, (i.e. returns "sound1" for "sound1.wav"),
 but does not include parent directories (returns "sound1" for "/home/daniel/sound1.wav").
 
-* @getParentDir: .fileName$
+* @getParentDir: fileName$
 
 Returns parent directory, including trailing forward slash. (i.e. returns "/home/daniel/" for 
 "/home/daniel/sound1.wav")
