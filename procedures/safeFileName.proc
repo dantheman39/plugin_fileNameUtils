@@ -14,11 +14,10 @@
 # This should work on relative as well as full paths
 #
 # Numbers are initially zero padded to
-# two places (01, 02, 03), though it will automatically
-# "level up" if needed. (If the file file-100.wav exists,
-# it will zero pad to three levels). 
-# To change it to be three by default, 
-# for example, change the line .zeros = 2 below.
+# two places (01, 02, 03), though it should have no trouble
+# if there are more than 99 files with the same name.
+# To change it to be three zeros by default, 
+# for example, change the line .zeros = 2 to .zeros = 3 below.
 
 procedure safeFileName: .inFileName$
     .zeros = 2 
