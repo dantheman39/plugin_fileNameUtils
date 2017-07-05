@@ -1,0 +1,40 @@
+#########################################################
+#
+#  .result$ contains the file name without the extension,
+#  and without the parent directories (use getParentDir
+#  if this is a problem).
+#
+#	@removeExtension: "/Users/daniel/name.wav"
+#	root$ = removeExtension.result$
+#	# root$ contains "name"
+#
+#	# to keep full path:
+#	@getParentDir: "/Users/daniel/name.wav"
+#	parents$ = getParentDir.result$
+#	# parent$ contains "/Users/daniel/"
+#
+#  only accepts unix style paths:
+#  if on Windows, use C:/Users/daniel/boss.txt,
+#  not C:\Users\daniel\boss.txt
+
+procedure removeExtension (.str$)
+
+	#first, remove any parent directories
+	#last slash index
+	.slInd = rindex_regex(.str$, "/")
+
+	#no parent directories
+	.noPar$ = right$ (.str$, length (.str$) - .slInd)
+
+	#last period index
+	.perInd = rindex_regex(.noPar$, "\.")
+
+	#if no extension
+	if .perInd == 0
+		.result$ = .noPar$
+	else
+		.result$ = left$ (.noPar$, .perInd - 1)
+	endif
+
+endproc
+

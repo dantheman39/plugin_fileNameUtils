@@ -1,0 +1,25 @@
+#######################################################
+# If given a full path, will return the parent directories
+# (the containing folders)
+#
+#	@getParentDir: "/Users/daniel/name.wav"
+#	parents$ = getParentDir.result$
+#	# parent$ contains "/Users/daniel/"
+#
+# Returns a blank string "" if no parent directory found
+
+procedure getParentDir: .fil$
+
+	#Search for last forward or backward slash
+	.reg$ = "/|\\"
+	.rightSlashIndex = rindex_regex(.fil$, .reg$)
+
+	#appendInfoLine: "Input: ", .fil$, "Index: ",  .rightSlashIndex
+	if .rightSlashIndex == 0
+		.result$ = ""
+	else
+		.result$ = left$(.fil$, .rightSlashIndex)
+	endif
+
+endproc
+

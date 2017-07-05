@@ -1,0 +1,66 @@
+##############################################
+# Get a safe file name like this:
+#
+#    @safeFileName: "fileName.wav"
+#    outName$ = safeFileName.result$
+#
+# Simply keeps trying to find a file
+# name that doesn't exist, adding numbers to
+# the file name.
+# If it finds a file that exists, it goes up
+# in numbers using a dash then a zero-padded number.
+# (tries sound-01.wav, then sound-02.wav, etc.)
+#
+# This should work on relative as well as full paths
+#
+# Numbers are initially zero padded to
+# two places (01, 02, 03), though it will automatically
+# "level up" if needed. (If the file file-100.wav exists,
+# it will zero pad to three levels). 
+# To change it to be three by default, 
+# for example, change the line .zeros = 2 below.
+
+procedure safeFileName: .inFileName$
+    .zeros = 2 
+
+    @getParentDir: .inFileName$
+    .parentDir$ = getParentDir.result$
+
+    @getExtension: .inFileName$
+    .ext$ = getExtension.result$  
+
+    @removeExtension: .inFileName$
+    .root$ = removeExtension.result$
+
+    # find a dash followed by numbers
+    # on the right side of the root
+    .reg$ = "\-\d+$"
+    .numInd = index_regex: .root$, .reg$
+    .count = 0
+    if .numInd
+        .count = number: (right$: .root$, (length: .root$) - .numInd)
+        .root$ = left$: .root$, .numInd - 1
+    endif
+
+    .outFileName$ = .inFileName$
+    while fileReadable: .outFileName$
+
+        .count += 1
+
+        # if we had over a hundred files
+        # of the same name, for example,
+        # up the zero fill
+        if .count >= (10 ^ .zeros)
+            .zeros += 1
+        endif
+
+        @zeroFill: .count, .zeros
+        .count$ = zeroFill.result$
+
+        .outFileName$ = .parentDir$ + .root$ + "-" + .count$ + "." + .ext$
+    endwhile
+
+    .result$ = .outFileName$
+
+endproc
+
