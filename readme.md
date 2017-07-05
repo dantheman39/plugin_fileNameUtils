@@ -10,7 +10,7 @@ you want to use to the bottom of your script and you're off and running.
 
 See below for descriptions, there are also examples
 in the files themselves. If you need help or find a mistake, 
-let me know. daniel.riggs1@gmail.com
+let me know.
 
 Summary
 -------
