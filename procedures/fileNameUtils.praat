@@ -86,6 +86,76 @@ procedure getParentDir: .fil$
 
 endproc
 
+################################################
+# noParentDir.result$ contains the lowest-level
+# file or folder name. Only tested with forward
+# slashes (unix-style paths, which also work on
+# Windows. Use "folder/file.txt" instead of 
+# "folder\file.txt"). If the lowest level is 
+# a folder, the ending slash is maintained.
+#
+# @noParentDir: "/home/daniel/Desktop/Mom/birthday.txt"
+# fileNoParent$ = noParentDir.result$
+# # fileNoParent$ contains "birthday.txt"
+#
+# The lines commented below are a test:
+#f$[1] = "/home/daniel/file.txt"
+#f$[2] = "/home/daniel/file"
+#f$[3] = "/home/daniel/files/"
+#f$[4] = "file.txt"
+#f$[5] = "file"
+#f$[6] = "//"
+#
+#for c to 6
+#
+#	@noParentDir: f$[c]
+#	appendInfoLine: noParentDir.result$
+#
+#endfor
+procedure noParentDir: .fil$
+    .reg$ = "/|\\"
+
+	.charCount = 0
+	.matchFound = 0
+	.filNoEndSlash$ = .fil$
+	.replaceSlash = 0
+	repeat
+		.rightSlashIndex = rindex_regex(.filNoEndSlash$, .reg$)
+		if .rightSlashIndex == 0
+			.matchFound = 1
+			.result$ = .filNoEndSlash$
+		else
+			.fullLen = length(.filNoEndSlash$)
+			.len = (.fullLen - .rightSlashIndex)
+		
+			if .len == 0
+				# The last character is a slash
+				.filNoEndSlash$ = left$(.fil$, .fullLen - 1)
+				.replaceSlash = 1
+			else
+				.result$ = right$(.filNoEndSlash$, .len)
+				.matchFound = 1
+			endif
+
+		endif
+		.charCount += 1
+	until .matchFound or (.charCount > .fullLen)
+
+	if .replaceSlash
+		.result$ = .result$ + "/"
+	endif
+
+	if !.matchFound
+		beginPause: "Warning!"
+			comment: "Something went wrong in procedure ""noParentDir""."
+			comment: "Either the file path was malformed, or there is"
+			comment: "a programmer mistake in this procedure. The file"
+			comment: "path is:"
+			comment: .fil$
+		clicked = endPause: "Continue anyway", 1
+	endif
+endproc
+
 ##############################################
 # Get a safe file name like this:
 #
