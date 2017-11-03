@@ -166,8 +166,8 @@ endproc
 # name that doesn't exist, adding numbers to
 # the file name.
 # If it finds a file that exists, it goes up
-# in numbers using a dash then a zero-padded number.
-# (tries sound-01.wav, then sound-02.wav, etc.)
+# in numbers using a zero-padded number surrounded.
+# by parentheses (tries sound.wav, then sound(01).wav, etc.)
 #
 # This should work on relative as well as full paths
 #
@@ -175,10 +175,16 @@ endproc
 # two places (01, 02, 03), though it should have no trouble
 # if there are more than 99 files with the same name.
 # To change it to be three zeros by default, 
-# for example, change the line .zeros = 2 to .zeros = 3 below.
+# for example, add this line somewhere toward the top of 
+# your script, before calling @safeFileName. 
+#
+#	safeFileName_numZeros = 3
 
 procedure safeFileName: .inFileName$
-    .zeros = 2 
+	.zeros = 2
+	if variableExists: "safeFileName_numZeros"
+		.zeros = safeFileName_numZeros 
+	endif
 
     @getParentDir: .inFileName$
     .parentDir$ = getParentDir.result$
@@ -189,16 +195,7 @@ procedure safeFileName: .inFileName$
     @removeExtension: .inFileName$
     .root$ = removeExtension.result$
 
-    # find a dash followed by numbers
-    # on the right side of the root
-    .reg$ = "\-\d+$"
-    .numInd = index_regex: .root$, .reg$
-    .count = 0
-    if .numInd
-        .count = number: (right$: .root$, (length: .root$) - .numInd)
-        .root$ = left$: .root$, .numInd - 1
-    endif
-
+	.count = 0
     .outFileName$ = .inFileName$
     while fileReadable: .outFileName$
 
@@ -214,7 +211,7 @@ procedure safeFileName: .inFileName$
         @zeroFill: .count, .zeros
         .count$ = zeroFill.result$
 
-        .outFileName$ = .parentDir$ + .root$ + "-" + .count$ + .ext$
+        .outFileName$ = .parentDir$ + .root$ + "(" + .count$ + ")" + .ext$
     endwhile
 
     .result$ = .outFileName$
