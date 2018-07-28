@@ -20,7 +20,7 @@ Note that I use "return" as a shorthand for finding the result in:
 
 * @safeFileName: inFileName$
 
-Returns a file name that doesn't exist, using `[dash][zeroPaddedNumber]`, i.e.
+If inFileName$ exists, return a file with a number, using `[dash][zeroPaddedNumber]`, i.e.
 if "fileName.wav" exists, it will return "fileName-01.wav".
 
 * @getExtension: fileName$
